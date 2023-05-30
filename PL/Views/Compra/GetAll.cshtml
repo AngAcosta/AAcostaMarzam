@@ -1,0 +1,38 @@
+﻿@model ML.Medicamento
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Venta de Medicamentos</h1>
+<br />
+
+<link rel="stylesheet" href="~/css/Cardss/Cards.css" />
+
+<div class="container">
+    <div class="row row-cols-2 row-cols-md-4 g-1">
+        @foreach (ML.Medicamento medicamento in Model.Medicamentos)
+        {
+            <div class="row col-10">
+                <div class="card" id="cards">
+                    @if (medicamento.Imagen != null)
+                    {
+                        <img class="img" src="data:image/*;base64,@medicamento.Imagen">
+                    }
+                    <span>@medicamento.Nombre</span>
+                    <p class="info">@medicamento.Descripcion</p>
+                    <div class="share">
+                        <span id="precio">Precio: @medicamento.Precio</span>
+                        <span style="display:none">IdMedicamento: @medicamento.IdMedicamento</span>
+                        <a href="@Url.Action("AddProducto", "Compra", new {medicamento.IdMedicamento, @Model.Medicamentos})" class="btn btn-outline-info" type="button" style="text-align:center;"><i class="fa-solid fa-cart-shopping"></i></a>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </div>
+            <br />
+        }
+    </div>
+    <br />
+</div>
+<br />

@@ -1,0 +1,197 @@
+﻿@model ML.Medicamento
+@{
+    ViewData["Title"] = "AddProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12" style="text-align:center">
+            <h1>AddProducto</h1>
+        </div>
+    </div>
+    <br />
+    <br />
+    @if (Model.Medicamentos != null && Model.Medicamentos.Count > 0)
+    {
+        decimal suma = 0;
+        <table class="table table-bordered table-responsive table-hover " id="table_productos">
+            <thead>
+                <tr>
+                    <td style="text-align:center;">Eliminar de la Lista</td>
+                    <td style="text-align:center;">Producto</td>
+                    <td style="text-align:center;">Cantidad</td>
+                    <td style="text-align:center;">Total Productos</td>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (ML.Medicamento producto in Model.Medicamentos)
+                {
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle;"><a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Compra", new { IdProducto = producto.IdMedicamento })"><i class="fa-solid fa-eraser"></i></a></td>
+                        <td>@producto.Nombre</td>
+                        <td>
+                            <div style="text-align:center;">
+                                <a class="btn btn-sm btn-outline-success" id='aumentar' href="@Url.Action("SumarProducto", "Compra", new { producto.IdMedicamento, Model.TotalProductos })" style="float:left;">+</a>
+                                <input type='text' id="@producto.IdMedicamento" value="@producto.Cantidad" style="text-align:center; border:0; width:25px;" readonly>
+                                <a class="btn btn-sm btn-outline-danger" id='disminuir' href="@Url.Action("RestarProducto", "Compra", new { producto.IdMedicamento, Model.TotalProductos })" style="float:right; ">-</a>
+                            </div>
+                        </td>
+                        <td style="display:none;"><input type="text" id="pre+@producto.IdMedicamento" value="@producto.Precio" /></td>
+                        <td id="subtotal" style="text-align:center;"><input type="text" value="@producto.Subtotal" id="subtotal.@producto.IdMedicamento" style="border:0; width:80px;" readonly /></td>
+                    </tr>
+                    suma += producto.Subtotal;
+                }
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-6" style="float:right;">
+                @Html.Label("Total a Pagar: ")
+            </div>
+            <div class="col-md-6" style="float:right;">
+                @suma
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-12" style="float:right;">
+                <button style="float:right;" type="button" class="btn btn-success" id="btnComprar" onclick="Modal()">Comprar</button>
+            </div>
+        </div>
+    }
+    else
+    {
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-danger">
+                    <div class="panel-default panel-heading" style="font:red; text-align:center;">No tienes ningun producto agregado</div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-2" style="float:left;">
+            @Html.ActionLink("Regresar", "GetAll", "Compra", new {@Model.TotalProductos}, htmlAttributes: new {@class="btn btn-danger", })
+        </div>
+    </div>
+
+</div>
+
+
+<div class="container">
+    <div class="modal fade" id="ModalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align:center;">
+                    <h4 class="modal-title" id="myModalLabel" style="text-align:center;">Confirmacion de Pago</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="Form">
+                        <div class="form-group">
+                            <label id="lblNombre">Pago</label>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblNumero">Numero de Tarjeta</label>
+                            <input type="text" class="form-control" id="txtNumeroTarjeta" placeholder="XXXX-XXXX-XXXX" />
+                        </div>
+                        <div class="form-group">
+                            <label id="lblNombre">Clave de Seguridad</label>
+                            <input type="text" class="form-control" id="txtCCV" placeholder="CCV" />
+                        </div>
+                        <div class="form-group">
+                            <label id="lblNombre">Direccion</label>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblApellidoPaterno">Calle</label>
+                            <input type="text" class="form-control" id="txtCalle" placeholder="Calle, Av" />
+                        </div>
+                        <div class="form-group">
+                            <label id="lblApellidoMaterno">Numero Exterior</label>
+                            <input type="text" class="form-control" id="txtNumE" placeholder="Numero Exterior" />
+                        </div>
+                        <div class="form-group">
+                            <label id="lblApellidoMaterno">Numero Interior</label>
+                            <input type="text" class="form-control" id="txtNumI" placeholder="Numero Interior" />
+                        </div>
+                        <div class="form-group">
+                            <label id="lblApellidoMaterno">Codigo Postal</label>
+                            <input type="text" class="form-control" id="txtCP" placeholder="Codigo Postal" />
+                        </div>
+                        <div class="form-group">
+                            <label id="lblApellidoMaterno">Estado</label>
+                            <input type="text" class="form-control" id="txtEstado" placeholder="Estado" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnGuardar" onclick="Pedido()">Registrar Compra</button>
+                    <button type="button" class="btn btn-danger" onclick="Cerrar()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Aviso</h4>
+
+                        </div>
+                        <div class="modal-body">
+                            <h5>
+                                <i class="fa-solid fa-cart-shopping fa-shake"></i>  Su pedido ya esta en camino.
+                            </h5>
+                        </div>
+                        <div class="modal-footer">
+                            @Html.ActionLink("Ok", "GetAll", "Compra", htmlAttributes: new {@class="btn btn-danger"})
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+
+        function Modal() {
+            var modal = $('#ModalForm').modal('show');
+            document.getElementById("Form").reset();
+        }
+
+        function Cerrar() {
+            var modal = $('#ModalForm').modal('hide');
+        }
+
+        function Pedido() {
+            $.ajax({
+                type: 'Get',
+                url: '@Url.Action("Comprar")',
+                datatype: 'json',
+                success: function (correct) {
+                    var modal = $('#ModalForm').modal('hide');
+                    $('#myModal').modal('show');
+                }
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,57 @@
+﻿@model ML.Medicamento
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Lista de Medicamento</h1>
+<br />
+
+<div>
+    @Html.ActionLink("Agregar Medicamneto","Form","Medicamento", htmlAttributes: new {@class = "btn btn-success"})
+</div>
+<br />
+
+<div class="row">
+    @if (Model.Medicamentos != null)
+    {
+        <table class="table table-responsive table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td class="text-center" style="font-weight:bold;">Editar</td>
+                    <td style="display:none">IdMedicamento</td>
+                    <td class="text-center" style="font-weight:bold;">Nombre</td>
+                    <td class="text-center" style="font-weight:bold;">Descripcion</td>
+                    <td class="text-center" style="font-weight:bold;">Precio</td>
+                    <td class="text-center" style="font-weight:bold;">Imagen</td>
+                    <td class="text-center" style="font-weight:bold;">Eliminar</td>
+                </tr>
+            </thead>
+            @foreach (ML.Medicamento medicamento in Model.Medicamentos)
+            {
+                <tbody>
+                    <tr>
+                        <td class="text-center"><a class="btn btn-warning" style="font-weight:bold;" href="@Url.Action("Form","Medicamento", new {IdMedicamento = medicamento.IdMedicamento})"></a></td>
+
+                        <td style="display:none">@medicamento.IdMedicamento</td>
+                        <td>@medicamento.Nombre</td>
+                        <td>@medicamento.Descripcion</td>
+                        <td>@medicamento.Precio</td>
+                        <td>
+                            @if (medicamento.Imagen != null)
+                            {
+                                <img id="Img" src="data:image/*;base64,@medicamento.Imagen" style="width:100px ; height:100px">
+                            }
+                            else
+                            {
+                                <img id="Img" src="~/Imagene/MedicamentoGnl" style="width:100px ; height:150px" />
+                            }
+                        </td>
+
+                        <td class="text-center"><a class="btn btn-danger" style="font-weight:bold;" href="@Url.Action("Delete","Medicamento", new{ IdMedicamento = medicamento.IdMedicamento})"></a></td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    }
+</div>
