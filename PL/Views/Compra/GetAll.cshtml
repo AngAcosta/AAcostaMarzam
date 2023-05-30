@@ -21,10 +21,10 @@
                     }
                     <span>@medicamento.Nombre</span>
                     <p class="info">@medicamento.Descripcion</p>
+                    <a href="@Url.Action("AddProducto", "Compra", new {medicamento.IdMedicamento, @Model.Medicamentos})" class="btn btn-outline-info" type="button" style="text-align:center;"><i class="fa-solid fa-cart-shopping"></i></a>
                     <div class="share">
                         <span id="precio">Precio: @medicamento.Precio</span>
                         <span style="display:none">IdMedicamento: @medicamento.IdMedicamento</span>
-                        <a href="@Url.Action("AddProducto", "Compra", new {medicamento.IdMedicamento, @Model.Medicamentos})" class="btn btn-outline-info" type="button" style="text-align:center;"><i class="fa-solid fa-cart-shopping"></i></a>
                     </div>
                 </div>
                 <br />

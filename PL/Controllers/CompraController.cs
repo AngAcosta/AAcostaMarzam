@@ -146,7 +146,6 @@ namespace PL.Controllers
 
         public ActionResult Delete(int IdProducto)
         {
-            //HttpContext.Session.GetString("Productos");
             ML.Medicamento medicamento = new ML.Medicamento();
             medicamento.Medicamentos = new List<object>();
 
